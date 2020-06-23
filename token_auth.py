@@ -1,4 +1,5 @@
-# expect a token somewhere: 
+# Not necessary when using flask_jwt_extended: Automatically checks values
+
 # When sending a request with swagger, it will automatically send the given "Authorization header"
 
 '''
