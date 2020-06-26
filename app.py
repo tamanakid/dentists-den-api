@@ -2,8 +2,6 @@ from flask import Flask, Blueprint, request
 from flask_restx import Resource, Api
 
 from extensions import register_extensions
-from user import api as user_api
-from dog import api as dog_api
 
 ## Instantiate Flask App
 
@@ -33,7 +31,12 @@ register_extensions(app)
 
 ## Add Namespaces
 
-api.add_namespace(user_api)
+
+from modules.user import ns as user_ns
+from dog import api as dog_api
+
+
+api.add_namespace(user_ns)
 api.add_namespace(dog_api)
 
 
