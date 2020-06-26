@@ -4,6 +4,9 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_jwt_extended import JWTManager
 import os
+from datetime import timedelta
+
+
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
@@ -16,6 +19,7 @@ cors = CORS()
 
 def register_extensions(app):
 	app.config['JWT_SECRET_KEY'] = 'secret-key'
+	app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(minutes=60)
 	app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.path.join(basedir, 'db.sqlite')
 	app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 

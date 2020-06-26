@@ -3,20 +3,33 @@ from werkzeug.exceptions import HTTPException
 from flask_restx import Namespace, Resource, fields, reqparse, marshal
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
-from extensions import db, bcrypt, ma
+from extensions import db, bcrypt
 
 
 
 ns = Namespace("user", description="User-Related Endpoints")
 
 
-from .models_api import *
-from .models_db import *
+from utils.exceptions_global import GLOBAL_SERVER_ERROR
+from .exceptions import *
+from .services import *
 
 
 
+@ns.route("/register")
+class UserRegister(Resource):
 
-# These should ns.inherit() from user_login_model (https://www.youtube.com/watch?v=YvXHpBYH4yE&list=PLNmsVeXQZj7otfP2zTa8AIiNIWVg0BRqs&index=27)
+    # POST
+    @ns.expect(user_register_model, validate=True)
+    @ns.response(201, "User registered successfully", user_wtoken_model)
+    @ns.response(409, "Username already exists", error_fields)
+    def post(self):
+        # try:
+        body = user_register_parser.parse_args(request)
+        return AuthService.register(body)
+        # except Exception as error:
+        #     print(f"error: {error}")
+        #     return throw_exception(GLOBAL_SERVER_ERROR)
 
 
 
@@ -26,20 +39,8 @@ CATS = [
 ]
 
 
-def throw_exception(cod):
 
-    exceptions = {
-        'userExistsException': { 'marshal': { 'message': 'User already exists' }, 'status_code': 409 }
-    }
-
-    exc = exceptions[cod]
-    print(f"exc: {exc}")
-
-    return marshal(exc['marshal'], error_fields), exc['status_code']
-
-
-
-
+'''
 @ns.route("")
 class CatList(Resource):
     @jwt_required # requires "Authorization": "Bearer <token>"
@@ -65,9 +66,8 @@ class CatList(Resource):
             existing_user = User.query.get(username)
             if (existing_user is not None):
                 print(f"Error: {existing_user}")
-                return throw_exception('userExistsException')
+                return throw_exception(USER_REGISTER_EXISTS)
                 # return marshal({ 'message': 'User already exists' }, error_fields), 409
-            print(f"No error: {username}")
             firstname = args.get('firstname')
             lastname = args.get('lastname')
             password = bcrypt.generate_password_hash(args.get('password')).decode("utf-8")
@@ -121,3 +121,4 @@ class Cat(Resource):
             return {"error": "true"}, 500
 
 
+'''

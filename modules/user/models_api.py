@@ -1,7 +1,7 @@
 from flask_restx import fields, reqparse
 
 from . import ns
-from utils.errors import append_error_fields
+from utils.error_handling import append_error_fields
 
 error_fields = append_error_fields(ns)
 

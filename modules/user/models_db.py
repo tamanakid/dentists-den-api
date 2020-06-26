@@ -1,8 +1,7 @@
-
-
 from extensions import db, ma
 
 
+# User Table
 
 class User(db.Model):
     username = db.Column(db.String(16), primary_key=True)
@@ -16,6 +15,7 @@ class User(db.Model):
         self.firstname = firstname
         self.lastname = lastname
         self.password = password
+
 
 
 # Product Schema
